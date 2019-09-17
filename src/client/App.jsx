@@ -8,9 +8,9 @@ class App extends React.Component {
   constructor() {
     super();
     this.state = {
-      userId: null,
-      inputUsername: null,
-      inputPassword: null,
+      userId: 1, //set to null for full app
+      inputUsername: '',
+      inputPassword: '',
 
 
     };

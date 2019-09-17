@@ -4,4 +4,6 @@ module.exports = (app, db) => {
 
   app.post('/users/login', toss.login);
   app.post('/users/register', toss.register);
+
+  app.post('/groups/new', toss.newGroup);
 };

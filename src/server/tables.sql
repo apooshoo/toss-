@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS users_groups (
   id SERIAL PRIMARY KEY,
   userId INTEGER,
   groupId INTEGER,
-  entry TEXT
+  entry TEXT DEFAULT NULL
   );
 
 CREATE TABLE IF NOT EXISTS users_friends (

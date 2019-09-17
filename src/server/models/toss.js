@@ -37,8 +37,26 @@ module.exports = (dbPoolInstance) => {
     });
   };
 
+  let newGroup = (data, callback) => {
+    console.log('in newGroup model');
+    let values = [data.inputGroupName];
+    console.log('values:', values)
+
+    const query = `INSERT INTO groups (groupname) SELECT $1 WHERE NOT EXISTS (SELECT * FROM groups WHERE groupname = $1) RETURNING *`;
+    dbPoolInstance.query(query, values, (err, result) => {
+        if(err){
+            callback(err, null);
+        } else if (result.rows.length > 0){
+            callback(null, result.rows);
+        } else {
+            callback(null, null);
+        }
+    });
+  };
+
   return {
     login,
-    register
+    register,
+    newGroup
   };
 };
