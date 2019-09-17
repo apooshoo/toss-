@@ -1,8 +1,8 @@
 module.exports = (app, db) => {
 
-  const pokemon = require('./controllers/pokemon')(db);
+  const toss = require('./controllers/toss')(db);
 
-  app.get('/pokemon/:id', pokemon.get);
+  app.get('/pokemon/:id', toss.get);
 
-  app.get('/api/pokemon/:id', pokemon.apiget);
+  app.get('/api/pokemon/:id', toss.apiget);
 };
