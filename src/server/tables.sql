@@ -1,3 +1,9 @@
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS groups;
+DROP TABLE IF EXISTS users_groups;
+DROP TABLE IF EXISTS users_friends;
+
+
 CREATE TABLE IF NOT EXISTS users (
   id SERIAL PRIMARY KEY,
   username TEXT,
@@ -6,7 +12,7 @@ CREATE TABLE IF NOT EXISTS users (
 
 CREATE TABLE IF NOT EXISTS groups (
   id SERIAL PRIMARY KEY,
-  groupname TEXT,
+  groupname TEXT
   );
 
 CREATE TABLE IF NOT EXISTS users_groups (

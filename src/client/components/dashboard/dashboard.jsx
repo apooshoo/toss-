@@ -4,7 +4,9 @@ import PropTypes from 'prop-types';
 
 import styles from './style.scss';
 
-class Counter extends React.Component {
+
+
+class Dashboard extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -14,15 +16,13 @@ class Counter extends React.Component {
 
   render() {
     return (
-      <p className={styles.desc}>
-        {this.props.message} : {this.state.banana}
-      </p>
+      <p>{this.props.userId}</p>
     );
   }
 }
 
-Counter.propTypes = {
-  message: PropTypes.string.isRequired,
-};
+// Dashboard.propTypes = {
+//   message: PropTypes.string.isRequired,
+// };
 
-export default Counter;
+export default Dashboard;
