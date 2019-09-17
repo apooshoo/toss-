@@ -12,11 +12,11 @@ class Dashboard extends React.Component {
   constructor() {
     super();
     this.state = {
+        mode: 'main',
         usersGroups: [],
         inputGroupName: '',
-        currentGroup: null,
-        // currentGroupUsers: []
 
+        selectedGroup: null,
     };
   }
 
@@ -43,13 +43,10 @@ class Dashboard extends React.Component {
 
     request.addEventListener("load", function(){
       let responseData = JSON.parse( this.responseText );
-      console.log( 'resdata::', responseData );
       if (responseData === null){
         alert('Failed to create group! Try another group name.')
       } else {
-        console.log('parsed resdata:', responseData);
         console.log('create group successful');
-        dashboardThis.setState({currentGroup: responseData});
         console.log('adding this user to group');
         dashboardThis.addToGroup(dashboardThis.props.userId, responseData.id)
       }
@@ -83,7 +80,6 @@ class Dashboard extends React.Component {
       } else {
         console.log('parsed resdata:', responseData)
         console.log('create group successful')
-        // dashboardThis.setState({currentGroupUsers: [...this.state.currentGroupUsers].concat(responseData)})
       }
     });
 
@@ -111,11 +107,9 @@ class Dashboard extends React.Component {
 
     request.addEventListener("load", function(){
       let responseData = JSON.parse( this.responseText );
-      console.log( 'resdata::', responseData );
       if (responseData === null){
         console.log('no groups found!');
       } else {
-        console.log('parsed resdata:', responseData)
         console.log('found groups and saving to state!')
         responseData.map(group=>{
             dashboardThis.setState({usersGroups: [...dashboardThis.state.usersGroups.concat(group)]});
@@ -128,32 +122,37 @@ class Dashboard extends React.Component {
     request.open("GET", `/users/${userId}/groups`);
     request.send();
   }
-
-
-
 ////////////////////////////////////////////////END GET USERS GROUPS/////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
+  selectGroup(group){
+    this.setState({selectedGroup: group});
+  }
 
 
 
         // <button className="btn btn-primary w-50" onClick={()=>{this.addToGroup(this.props.userId, 1)}}>Add to Group</button>
+//UsersGroups: list of groups user is in
 
   render() {
+    if(this.state.mode === 'main'){
+        return (
+          <div className="wrapper">
+            <div className="form-group" >
+                <input type="text" className="form-control" placeholder="Group Name" onChange={()=>{this.inputGroupName()}} value={this.state.inputGroupName}/>
+            </div>
+            <button className="btn btn-primary w-50" onClick={()=>{this.createGroup()}}>Create Group</button>
 
-    return (
-      <div className="wrapper">
-        <div className="form-group" >
-            <input type="text" className="form-control" placeholder="Group Name" onChange={()=>{this.inputGroupName()}} value={this.state.inputGroupName}/>
-        </div>
-        <button className="btn btn-primary w-50" onClick={()=>{this.createGroup()}}>Create Group</button>
+            <UsersGroups
+                usersGroups={this.state.usersGroups}
+                selectGroup={(group)=>this.selectGroup(group)}
+            />
+
+          </div>
+        );
+    }
 
 
-        <UsersGroups usersGroups={this.state.usersGroups}/>
-
-      </div>
-    );
   }
 }
 
