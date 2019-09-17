@@ -13,15 +13,28 @@ class SelectedGroup extends React.Component {
     this.props.mainMode();
   }
 
+  componentDidMount(){
+    console.log(this.props.selectedGroup.id)
+
+  }
 
 
   render() {
     let selectedGroup = this.props.selectedGroup;
+    // console.log(selectedGroup.id)
+    let usersInGroup;
+    if(this.props.usersInGroup.length > 0){
+        usersInGroup = this.props.usersInGroup.map((user, index)=>{
+            return <p>{user.username}</p>
+        });
+    };
+
 
     return (
       <React.Fragment>
         <button onClick={()=>{this.mainMode()}}>Back to main</button>
         <p>{selectedGroup.groupname}</p>
+        {usersInGroup}
       </React.Fragment>
     );
   }

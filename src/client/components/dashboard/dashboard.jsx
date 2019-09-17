@@ -21,6 +21,7 @@ class Dashboard extends React.Component {
         inputGroupName: '',
 
         selectedGroup: null,
+        usersInGroup: [],
     };
   }
 
@@ -158,7 +159,42 @@ class Dashboard extends React.Component {
 ////////////////////////////////////////////////GET ALL FRIENDS END////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+///////////////////////////////////////////////GET ALL USERS IN GROUP START///////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  getGroupUsers(groupId){
+    console.log('getting all of users in group');
+    console.log('groupId:', groupId);
+
+    var request = new XMLHttpRequest();
+    var selectedGroupThis = this;
+
+    request.addEventListener("load", function(){
+        // console.log(this.responseText)
+      let responseData = JSON.parse( this.responseText );
+      // console.log('resdata:', responseData)
+      if (responseData === null){
+        // console.log('no users found!');
+      } else {
+        let usersInGroup = [];
+        responseData.map(user=>{
+            usersInGroup.push(user);
+        })
+        selectedGroupThis.setState({usersInGroup: usersInGroup});
+      }
+    });
+
+
+    request.open("GET", `/groups/${groupId}/users`);
+    request.send();
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////GET ALL USERS IN GROUP END/////////////////////////////////////////////////////////
+
+
   selectGroup(group){
+    this.getGroupUsers(group.id);
     this.setState({selectedGroup: group, mode: 'showSelectedGroup'});
   }
 
@@ -176,6 +212,7 @@ class Dashboard extends React.Component {
     } else if (this.state.mode === 'showSelectedGroup'){
         return <SelectedGroup
                     selectedGroup={this.state.selectedGroup}
+                    usersInGroup={this.state.usersInGroup}
                     mainMode={()=>{this.mainMode()}}
                 />
     }
