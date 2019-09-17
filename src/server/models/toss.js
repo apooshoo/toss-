@@ -90,11 +90,30 @@ module.exports = (dbPoolInstance) => {
     });
   };
 
+  let getUsersFriends = (data, callback) => {
+    console.log('in getUsersFriends model');
+    let values = [data.userId];
+    console.log('values:', values)
+
+    const query = `SELECT * FROM users_friends INNER JOIN users ON (users_friends.friendId = users.id) WHERE users_friends.userId = $1`;
+    dbPoolInstance.query(query, values, (err, result) => {
+        if(err){
+            callback(err, null);
+        } else if (result.rows.length > 0){
+            callback(null, result.rows);
+
+        } else {
+            callback(null, null);
+        }
+    });
+  };
+
   return {
     login,
     register,
     getUsersGroups,
     newGroup,
-    newGroupUser
+    newGroupUser,
+    getUsersFriends
   };
 };

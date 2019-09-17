@@ -76,13 +76,29 @@ module.exports = (db) => {
     });
   };
 
-  return {
+  let getUsersFriends = (req, res) => {
+    console.log('in getUsersFriends ctrlr');
+    console.log("params:", req.params);
+    db.toss.getUsersFriends(req.params, (err, result)=>{
+        if(err){
+            console.log('err,', err);
+        } else if (result === null){
+            res.send('null');
+        } else {
+            console.log('sending back:', result)
+            res.send(result);
+        };
+    });
+  };
 
+
+  return {
     login : login,
     register : register,
     getUsersGroups : getUsersGroups,
     newGroup : newGroup,
-    newGroupUser : newGroupUser
+    newGroupUser : newGroupUser,
+    getUsersFriends : getUsersFriends
   }
 
 };
