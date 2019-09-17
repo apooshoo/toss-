@@ -37,6 +37,24 @@ module.exports = (dbPoolInstance) => {
     });
   };
 
+  let getUsersGroups = (data, callback) => {
+    console.log('in getUsersGroups model');
+    let values = [data.userId];
+    console.log('values:', values)
+
+    const query = `SELECT * FROM users_groups INNER JOIN groups ON (users_groups.groupId = groups.id) WHERE users_groups.userId = $1`;
+    dbPoolInstance.query(query, values, (err, result) => {
+        if(err){
+            callback(err, null);
+        } else if (result.rows.length > 0){
+            callback(null, result.rows);
+
+        } else {
+            callback(null, null);
+        }
+    });
+  };
+
   let newGroup = (data, callback) => {
     console.log('in newGroup model');
     let values = [data.inputGroupName];
@@ -60,7 +78,7 @@ module.exports = (dbPoolInstance) => {
     let values = [data.userId, data.groupId];
     console.log('values:', values)
 
-    const query = `INSERT INTO users_groups (userId, groupId) SELECT $1, $2 WHERE NOT EXISTS (SELECT * FROM users_groups WHERE userId = $1 AND groupId = 2) RETURNING *`;
+    const query = `INSERT INTO users_groups (userId, groupId) SELECT $1, $2 WHERE NOT EXISTS (SELECT * FROM users_groups WHERE userId = $1 AND groupId = $2) RETURNING *`;
     dbPoolInstance.query(query, values, (err, result) => {
         if(err){
             callback(err, null);
@@ -75,6 +93,7 @@ module.exports = (dbPoolInstance) => {
   return {
     login,
     register,
+    getUsersGroups,
     newGroup,
     newGroupUser
   };

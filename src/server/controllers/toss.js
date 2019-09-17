@@ -30,6 +30,21 @@ module.exports = (db) => {
     });
   };
 
+  let getUsersGroups = (req, res) => {
+    console.log('in getUsersGroups ctrlr');
+    console.log("params:", req.params);
+    db.toss.getUsersGroups(req.params, (err, result)=>{
+        if(err){
+            console.log('err,', err);
+        } else if (result === null){
+            res.send('null');
+        } else {
+            console.log('sending back:', result)
+            res.send(result);
+        };
+    });
+  };
+
   let newGroup = (req, res) => {
     console.log('in newGroup ctrlr');
     console.log("body:", req.body);
@@ -52,6 +67,7 @@ module.exports = (db) => {
         if(err){
             console.log('err,', err);
         } else if (result === null){
+            console.log('YOO?')
             res.send('null');
         } else {
             console.log('sending back:', result[0])
@@ -64,6 +80,7 @@ module.exports = (db) => {
 
     login : login,
     register : register,
+    getUsersGroups : getUsersGroups,
     newGroup : newGroup,
     newGroupUser : newGroupUser
   }

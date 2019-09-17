@@ -1,7 +1,6 @@
 import React from 'react';
 import { hot } from 'react-hot-loader';
 
-import Form from './components/form/form';
 import Dashboard from './components/dashboard/dashboard';
 
 class App extends React.Component {

@@ -4,20 +4,24 @@ import PropTypes from 'prop-types';
 
 import styles from './style.scss';
 
+import UsersGroups from '../usersGroups/usersGroups';
+
 
 
 class Dashboard extends React.Component {
   constructor() {
     super();
     this.state = {
+        usersGroups: [],
         inputGroupName: '',
         currentGroup: null,
         // currentGroupUsers: []
+
     };
   }
 
   componentDidMount(){
-
+    this.getUsersGroups(this.props.userId);
   }
 
   componentDidUpdate(){
@@ -65,8 +69,8 @@ class Dashboard extends React.Component {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   addToGroup(userId, groupId){
     console.log('adding to group');
-    console.log('data:', userId);
-    console.log(groupId)
+    console.log('userId', userId);
+    console.log('groupId', groupId)
 
     var request = new XMLHttpRequest();
     var dashboardThis = this;
@@ -96,20 +100,57 @@ class Dashboard extends React.Component {
 ////////////////////////////////////////////////////INSERT INTO GROUP END//////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////GET USERS GROUPS//////////////////////////////////////////////
+  getUsersGroups(userId){
+    console.log('getting all of users groups');
+    console.log('userId:', userId);
+
+    var request = new XMLHttpRequest();
+    var dashboardThis = this;
+
+    request.addEventListener("load", function(){
+      let responseData = JSON.parse( this.responseText );
+      console.log( 'resdata::', responseData );
+      if (responseData === null){
+        console.log('no groups found!');
+      } else {
+        console.log('parsed resdata:', responseData)
+        console.log('found groups and saving to state!')
+        responseData.map(group=>{
+            dashboardThis.setState({usersGroups: [...dashboardThis.state.usersGroups.concat(group)]});
+        })
+        // dashboardThis.setState({currentGroupUsers: [...this.state.currentGroupUsers].concat(responseData)})
+      }
+    });
+
+
+    request.open("GET", `/users/${userId}/groups`);
+    request.send();
+  }
 
 
 
+////////////////////////////////////////////////END GET USERS GROUPS/////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+        // <button className="btn btn-primary w-50" onClick={()=>{this.addToGroup(this.props.userId, 1)}}>Add to Group</button>
 
   render() {
+
     return (
       <div className="wrapper">
-        <p>{this.props.userId}</p>
         <div className="form-group" >
             <input type="text" className="form-control" placeholder="Group Name" onChange={()=>{this.inputGroupName()}} value={this.state.inputGroupName}/>
         </div>
         <button className="btn btn-primary w-50" onClick={()=>{this.createGroup()}}>Create Group</button>
 
-        <button className="btn btn-primary w-50" onClick={()=>{this.addToGroup(this.props.userId, 1)}}>Add to Group</button>
+
+        <UsersGroups usersGroups={this.state.usersGroups}/>
 
       </div>
     );
