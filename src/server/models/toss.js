@@ -48,6 +48,24 @@ module.exports = (dbPoolInstance) => {
             callback(err, null);
         } else if (result.rows.length > 0){
             callback(null, result.rows);
+
+        } else {
+            callback(null, null);
+        }
+    });
+  };
+
+  let newGroupUser = (data, callback) => {
+    console.log('in newGroupUser model');
+    let values = [data.userId, data.groupId];
+    console.log('values:', values)
+
+    const query = `INSERT INTO users_groups (userId, groupId) SELECT $1, $2 WHERE NOT EXISTS (SELECT * FROM users_groups WHERE userId = $1 AND groupId = 2) RETURNING *`;
+    dbPoolInstance.query(query, values, (err, result) => {
+        if(err){
+            callback(err, null);
+        } else if (result.rows.length > 0){
+            callback(null, result.rows);
         } else {
             callback(null, null);
         }
@@ -57,6 +75,7 @@ module.exports = (dbPoolInstance) => {
   return {
     login,
     register,
-    newGroup
+    newGroup,
+    newGroupUser
   };
 };
