@@ -198,6 +198,40 @@ class Dashboard extends React.Component {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////GET ALL USERS IN GROUP END/////////////////////////////////////////////////////////
 
+  submitEntry(userId, groupId, entry){
+    // console.log('submitting entry to group');
+    // console.log('userId', userId)
+    // console.log('groupId:', groupId);
+    var request = new XMLHttpRequest();
+    var submitEntryThis = this;
+
+    request.addEventListener("load", function(){
+        // console.log(this.responseText)
+      let responseData = JSON.parse( this.responseText );
+      // console.log('resdata:', responseData)
+      if (responseData === null){
+        // console.log('no users found!');
+      } else {
+        console.log('received in selectedGroup:', responseData)
+        //NEED TO UPDATE STATE!!----------------------------------------------------------------
+        let usersInGroup = [...submitEntryThis.state.usersInGroup];
+        let userSubmitting = usersInGroup.find(user=>{
+            return user.userid = userId;
+        });
+        userSubmitting.entry = responseData.entry;
+        submitEntryThis.setState({usersInGroup: usersInGroup})
+      };
+    });
+
+    let data = {
+        userId: userId,
+        groupId: groupId,
+        entry: entry
+    };
+    request.open("POST", '/groups/user/entry/new');
+    request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    request.send(JSON.stringify(data));
+  }
 
   selectGroup(group){
     this.setState({selectedGroup: null})
@@ -223,7 +257,9 @@ class Dashboard extends React.Component {
         return <SelectedGroup
                     selectedGroup={this.state.selectedGroup}
                     usersInGroup={this.state.usersInGroup}
+                    userId={this.props.userId}
                     mainMode={()=>{this.mainMode()}}
+                    submitEntry={(userId, groupId, entry)=>{this.submitEntry(userId, groupId, entry)}}
                 />
     }
   }

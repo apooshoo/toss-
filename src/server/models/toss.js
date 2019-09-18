@@ -108,6 +108,23 @@ module.exports = (dbPoolInstance) => {
     });
   };
 
+  let newGroupEntry = (data, callback) => {
+    console.log('in newGroupEntry model');
+    let values = [data.userId, data.groupId, data.entry];
+    console.log('values:', values)
+    const query = `UPDATE users_groups SET entry = $3 WHERE userId = $1 AND groupId = $2 RETURNING *`;
+    dbPoolInstance.query(query, values, (err, result) => {
+        if(err){
+            callback(err, null);
+        } else if (result.rows.length > 0){
+            callback(null, result.rows);
+
+        } else {
+            callback(null, null);
+        }
+    });
+  };
+
   let getUsersFriends = (data, callback) => {
     console.log('in getUsersFriends model');
     let values = [data.userId];
@@ -133,6 +150,7 @@ module.exports = (dbPoolInstance) => {
     newGroup,
     newGroupUser,
     getGroupUsers,
+    newGroupEntry,
     getUsersFriends
   };
 };

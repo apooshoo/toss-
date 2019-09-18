@@ -6,6 +6,7 @@ class SelectedGroup extends React.Component {
   constructor() {
     super();
     this.state = {
+        inputEntry: '',
     };
   }
 
@@ -18,6 +19,14 @@ class SelectedGroup extends React.Component {
 
   }
 
+  inputEntry(){
+    this.setState({inputEntry: event.target.value})
+  }
+
+
+  submitEntry(userId, groupId, entry){
+    this.props.submitEntry(userId, groupId, entry);
+  }
 
   render() {
     console.log("IN SELECTED GROUP", this.props.usersInGroup)
@@ -26,6 +35,7 @@ class SelectedGroup extends React.Component {
         usersInGroup = this.props.usersInGroup.map((user, index)=>{
             return <div key={index}>
                         <p>{user.username}</p>
+                        <p>Entry: {user.entry}</p>
                     </div>
         });
     };
@@ -34,6 +44,8 @@ class SelectedGroup extends React.Component {
     return (
       <React.Fragment>
         <button onClick={()=>{this.mainMode()}}>Back to main</button>
+        <input value={this.state.inputEntry} onChange={()=>{this.inputEntry()}}/>
+        <button onClick={()=>{this.submitEntry(this.props.userId, this.props.selectedGroup.groupid, this.state.inputEntry)}}>Submit Entry</button>
         <p>{this.props.selectedGroup.groupname}</p>
         {usersInGroup}
       </React.Fragment>

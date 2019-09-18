@@ -10,6 +10,7 @@ module.exports = (app, db) => {
   app.get('/groups/:groupId/users', toss.getGroupUsers);
   app.post('/groups/new', toss.newGroup);
   app.post('/groups/user/new', toss.newGroupUser);
+  app.post('/groups/user/entry/new', toss.newGroupEntry);
 
 
   app.get('/users/:userId/friends', toss.getUsersFriends)

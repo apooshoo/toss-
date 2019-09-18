@@ -81,18 +81,31 @@ module.exports = (db) => {
     console.log("params:", req.params);
     db.toss.getGroupUsers(req.params, (err, result)=>{
         if(err){
-            console.log('1111111111111111111111111111111111111111111111111111111111111111111111111111111111')
             console.log('err,', err);
         } else if (result === null){
-            console.log('2222222222222222222222222222222222222222222222222222222222222222222222222222222')
             res.send('null');
         } else {
-            console.log('333333333333333333333333333333333333333333333333333333333333333333333333333333333')
             console.log('sending back:', result)
             res.send(result);
         };
     });
   };
+
+  let newGroupEntry = (req, res) => {
+    console.log('in new group entry ctrlr');
+    console.log('body:', req.body)
+
+    db.toss.newGroupEntry(req.body, (err, result)=>{
+        if(err){
+            console.log('err,', err);
+        } else if (result === null){
+            res.send('null');
+        } else {
+            console.log('sending back:', result[0])
+            res.send(result[0]);
+        };
+    });
+  }
 
   let getUsersFriends = (req, res) => {
     // console.log('in getUsersFriends ctrlr');
@@ -117,6 +130,7 @@ module.exports = (db) => {
     newGroup : newGroup,
     newGroupUser : newGroupUser,
     getGroupUsers : getGroupUsers,
+    newGroupEntry : newGroupEntry,
     getUsersFriends : getUsersFriends
   }
 
