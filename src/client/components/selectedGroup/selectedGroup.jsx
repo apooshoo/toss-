@@ -25,7 +25,9 @@ class SelectedGroup extends React.Component {
     let usersInGroup;
     if(this.props.usersInGroup.length > 0){
         usersInGroup = this.props.usersInGroup.map((user, index)=>{
-            return <p>{user.username}</p>
+            return <div key={index}>
+                        <p>{user.username}</p>
+                    </div>
         });
     };
 

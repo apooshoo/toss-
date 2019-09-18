@@ -11,6 +11,7 @@ class UsersFriends extends React.Component {
 
 
 
+
   render() {
     let usersFriends;
     if(this.props.usersFriends.length > 0){
