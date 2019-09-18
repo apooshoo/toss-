@@ -83,10 +83,15 @@ class Dashboard extends React.Component {
       let responseData = JSON.parse( this.responseText );
       console.log( 'resdata::', responseData );
       if (responseData === null){
-        alert('Failed to create group! Try another group name.')
+        alert('Failed to add to group!')
       } else {
-        console.log('parsed resdata:', responseData)
-        console.log('create group successful')
+        // console.log(responseData)//this is relational table info. needs added info.
+        let usersInGroup = [...dashboardThis.state.usersInGroup]
+        let friendToAdd = [...dashboardThis.state.usersFriends].find(friend=>{
+            return friend.friendid === responseData.userid
+        });
+        usersInGroup.push(friendToAdd)
+        dashboardThis.setState({usersInGroup: usersInGroup});
       }
     });
 
@@ -195,6 +200,7 @@ class Dashboard extends React.Component {
 
 
   selectGroup(group){
+    this.setState({selectedGroup: null})
     this.getGroupUsers(group.id);
     this.setState({selectedGroup: group, mode: 'showSelectedGroup'});
   }
@@ -242,6 +248,10 @@ class Dashboard extends React.Component {
             <div className="rightCol col-3">
                 <UsersFriends
                     usersFriends={this.state.usersFriends}
+                    selectedGroup={this.state.selectedGroup}
+                    addToGroup={(userId, groupId)=>{this.addToGroup(userId, groupId)}}
+                    mode={this.state.mode}
+
                 />
             </div>
 

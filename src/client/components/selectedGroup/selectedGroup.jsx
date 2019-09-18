@@ -20,10 +20,9 @@ class SelectedGroup extends React.Component {
 
 
   render() {
-    let selectedGroup = this.props.selectedGroup;
-    // console.log(selectedGroup.id)
+    console.log("IN SELECTED GROUP", this.props.usersInGroup)
     let usersInGroup;
-    if(this.props.usersInGroup.length > 0){
+    if(this.props.usersInGroup != null){
         usersInGroup = this.props.usersInGroup.map((user, index)=>{
             return <div key={index}>
                         <p>{user.username}</p>
@@ -35,7 +34,7 @@ class SelectedGroup extends React.Component {
     return (
       <React.Fragment>
         <button onClick={()=>{this.mainMode()}}>Back to main</button>
-        <p>{selectedGroup.groupname}</p>
+        <p>{this.props.selectedGroup.groupname}</p>
         {usersInGroup}
       </React.Fragment>
     );
