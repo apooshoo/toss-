@@ -9,6 +9,14 @@ class CreateForm extends React.Component {
     };
   }
 
+  inputGroupName(){
+    this.props.inputGroupName();
+  }
+
+  createGroup(){
+    this.props.createGroup();
+  }
+
 
 
   render() {

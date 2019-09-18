@@ -54,7 +54,8 @@ class Dashboard extends React.Component {
       } else {
         console.log('create group successful');
         console.log('adding this user to group');
-        dashboardThis.addToGroup(dashboardThis.props.userId, responseData.id)
+        dashboardThis.setState({usersGroups: [...dashboardThis.state.usersGroups].concat(responseData)})//make sure the state reflects DB
+        dashboardThis.addToGroup(dashboardThis.props.userId, responseData.id)//ajax yourself into the group
       }
     });
 
@@ -208,7 +209,10 @@ class Dashboard extends React.Component {
 //UsersGroups: list of groups user is in
   setMidCol(){
     if(this.state.mode === 'main'){
-        return <CreateForm/>
+        return <CreateForm
+                    inputGroupName={()=>this.inputGroupName()}
+                    createGroup={()=>this.createGroup()}
+                />
     } else if (this.state.mode === 'showSelectedGroup'){
         return <SelectedGroup
                     selectedGroup={this.state.selectedGroup}
