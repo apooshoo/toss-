@@ -125,6 +125,24 @@ module.exports = (dbPoolInstance) => {
     });
   };
 
+  let getWinBalance = (data, callback) => {
+    console.log('in getWinBalance model');
+    let values = [data.userId, data.friendId];
+    console.log('values:', values)
+
+    const query = `SELECT * FROM users_friends WHERE userId = $1 AND friendId = $2`;
+    dbPoolInstance.query(query, values, (err, result) => {
+        if(err){
+            callback(err, null);
+        } else if (result.rows.length > 0){
+            callback(null, result.rows);
+
+        } else {
+            callback(null, null);
+        }
+    });
+  };
+
   let getUsersFriends = (data, callback) => {
     console.log('in getUsersFriends model');
     let values = [data.userId];
@@ -151,6 +169,7 @@ module.exports = (dbPoolInstance) => {
     newGroupUser,
     getGroupUsers,
     newGroupEntry,
+    getWinBalance,
     getUsersFriends
   };
 };

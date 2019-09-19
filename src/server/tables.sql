@@ -25,5 +25,6 @@ CREATE TABLE IF NOT EXISTS users_groups (
 CREATE TABLE IF NOT EXISTS users_friends (
   id SERIAL PRIMARY KEY,
   userId INTEGER,
-  friendId INTEGER
+  friendId INTEGER,
+  winBalance INTEGER DEFAULT 0
   );
