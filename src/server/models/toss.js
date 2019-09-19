@@ -143,6 +143,24 @@ module.exports = (dbPoolInstance) => {
     });
   };
 
+  let editWinBalance = (data, callback) => {
+    console.log('in editWinBalance model');
+    let values = [data.userId, data.friendId, data.value];
+    console.log('values:', values)
+
+    const query = `UPDATE users_friends SET winBalance = winBalance+$3 WHERE userId = $1 AND friendId = $2 RETURNING *`;
+    dbPoolInstance.query(query, values, (err, result) => {
+        if(err){
+            callback(err, null);
+        } else if (result.rows.length > 0){
+            callback(null, result.rows);
+
+        } else {
+            callback(null, null);
+        }
+    });
+  };
+
   let getUsersFriends = (data, callback) => {
     console.log('in getUsersFriends model');
     let values = [data.userId];
@@ -170,6 +188,7 @@ module.exports = (dbPoolInstance) => {
     getGroupUsers,
     newGroupEntry,
     getWinBalance,
+    editWinBalance,
     getUsersFriends
   };
 };

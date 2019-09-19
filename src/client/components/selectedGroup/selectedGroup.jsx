@@ -20,7 +20,7 @@ class SelectedGroup extends React.Component {
   }
 
   componentDidUpdate(){
-    // console.log(this.state)
+    console.log(this.state)
   }
 
   inputEntry(){
@@ -78,26 +78,31 @@ class SelectedGroup extends React.Component {
         return user.entry != null;
     }); //IGNORES USERS THAT DONT CONTRIBUTE ENTRY!
     console.log('participating users', pool);
+    if(pool.length <= 1){//------------------------------------------------------------------stop 0 or 1 person settles
+        alert('not enough people have participated')
+        return
+    }
 
     pool.forEach(user=>{
         let friendPool = pool.filter(friend=>{
             return friend != user;
         });
         friendPool.forEach(friend=>{
-            console.log('user:', user)
-            console.log('friend', friend)
             this.getWinBalance(user.userid, friend.userid);
         });
     });
 
   }
 ///////////////////////////////////////////////////////////////////////////////AJAX WIN BALANCES END////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////////GENERATE WEIGHTED RANDOM CHOICE START//////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
   confirmSettle(){
     let pool = this.props.usersInGroup.filter(user=>{
         return user.entry != null;
-    }); //IGNORES USERS THAT DONT CONTRIBUTE ENTRY!----------------------------
+    }); //------------------------------------------------------------------------------------IGNORES USERS THAT DONT CONTRIBUTE ENTRY!----------------------------
     // console.log('participating users', pool);
     let balanceWithFriends = pool.map(user=>{
         // console.log('mapped user:', user)
@@ -105,7 +110,7 @@ class SelectedGroup extends React.Component {
             // console.log('mapped balance', balance)
             return balance.userid === user.userid;
         })
-        return temp //RETURNS BALANCES IN THE ORDER OF POOL (ID INC)----------------------
+        return temp //----------------------------------------------------------------------------RETURNS BALANCES IN THE ORDER OF POOL (ID INC)----------------------
     });
     // console.log(balanceWithFriends);
 
@@ -122,7 +127,7 @@ class SelectedGroup extends React.Component {
     });
     //ACTUAL
     // console.log(balanceWithFriends)
-    console.log("EACH USERS TOTALBALANCEWITHFRIENDS", totalBalanceWithFriends)
+    console.log("EACH USERS TOTALBALANCEWITHFRIENDS", totalBalanceWithFriends)//----------------------STILL IN POOL ORDER
 
     let initWeightPerUser = pool.map(user=>{
         return 100/pool.length;
@@ -154,16 +159,67 @@ class SelectedGroup extends React.Component {
     let randomEntry = totalSample[randomIndex];//---------------------------------------------------------PULL RANDOM ENTRY
     console.log(randomEntry)
 
-    this.setWinningEntry(randomEntry)
-
-
-
+    this.setWinningEntry(randomEntry);
+    let winner = pool.find(user=>{
+        return user.entry === randomEntry;
+    })
+    console.log('WINNER:', winner)
+    let losers = pool.filter(user=>{
+        return user != winner;
+    });
+    console.log('losers:', losers);
+    losers.forEach(loser=>{//------------------------------------------------------------------------------ADD TO WINNER
+        this.updateWinBalance(winner.userid, loser.userid, 1)
+    });
+    losers.forEach(loser=>{//-------------------------------------------------------------------------------MINUS FROM LOSERS
+        this.updateWinBalance(loser.userid, winner.userid, -1)
+    })
   }
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////GENERATE RANDOM WEIGHTED CHOICE END//////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////UPDATE WIN BALANCE AFTER SETTLE//////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  updateWinBalance(userId, friendId, value){
+    // console.log('updating winBalance');
+    var request = new XMLHttpRequest();
+    var sgThis = this;
+
+    request.addEventListener("load", function(){
+      let responseData = JSON.parse( this.responseText );
+      if (responseData === null){
+        console.log('didnt update!');
+      } else {
+        console.log('updated winbalance in DB', responseData);
+        let winBalanceArray = [...sgThis.state.winBalanceArray];
+        let winBalanceToEdit = winBalanceArray.find(item=>{
+            return (item.userid === userId && item.friendid === friendId)
+        })
+        winBalanceToEdit.winbalance += value;
+        console.log('updated winbalance in state', winBalanceToEdit)
+        sgThis.setState({winBalanceArray: winBalanceArray})//-------------------------------------------------UPDATES VALUE IN STATE
+      }
+    });
+
+    let data = {
+        userId: userId,
+        friendId: friendId,
+        value: value
+    };
+    request.open("POST", `/users/balance`);
+    request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    request.send(JSON.stringify(data));
+  }
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////UPDATE WIN BALANCE AFTER SETTLE END///////////////////////////////////////////
+
+
 
   render() {
     // console.log("IN SELECTED GROUP", this.props.usersInGroup)
     let usersInGroup;
-    if(this.props.usersInGroup != null){
+    if(this.props.usersInGroup.length > 0){
         usersInGroup = this.props.usersInGroup.map((user, index)=>{
             return <div key={index}>
                         <p>Name: {user.username}</p>
@@ -171,6 +227,7 @@ class SelectedGroup extends React.Component {
                     </div>
         });
     };
+
 
 
     return (

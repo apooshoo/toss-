@@ -13,5 +13,6 @@ module.exports = (app, db) => {
   app.post('/groups/user/entry/new', toss.newGroupEntry);
 
   app.get('/users/:userId/:friendId/balance', toss.getWinBalance);
+  app.post('/users/balance', toss.editWinBalance);
   app.get('/users/:userId/friends', toss.getUsersFriends)
 };

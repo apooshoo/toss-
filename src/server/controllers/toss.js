@@ -122,6 +122,21 @@ module.exports = (db) => {
     });
   };
 
+  let editWinBalance = (req, res) => {
+    console.log('in editWinBalance ctrlr');
+    // console.log("params:", req.params);
+    db.toss.editWinBalance(req.body, (err, result)=>{
+        if(err){
+            console.log('err,', err);
+        } else if (result === null){
+            res.send('null');
+        } else {
+            console.log('sending back:', result[0])
+            res.send(result[0]);
+        };
+    });
+  };
+
   let getUsersFriends = (req, res) => {
     // console.log('in getUsersFriends ctrlr');
     // console.log("params:", req.params);
@@ -147,6 +162,7 @@ module.exports = (db) => {
     getGroupUsers : getGroupUsers,
     newGroupEntry : newGroupEntry,
     getWinBalance : getWinBalance,
+    editWinBalance : editWinBalance,
     getUsersFriends : getUsersFriends
   }
 
