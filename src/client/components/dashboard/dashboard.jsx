@@ -22,6 +22,8 @@ class Dashboard extends React.Component {
 
         selectedGroup: null,
         usersInGroup: [],
+        entry: '',
+        winningEntry: '',
     };
   }
 
@@ -243,13 +245,20 @@ class Dashboard extends React.Component {
 
 
   selectGroup(group){
-    this.setState({selectedGroup: null})
+    this.setState({selectedGroup: null, entry: '', winningEntry: ''})
     this.getGroupUsers(group.id);
     this.setState({selectedGroup: group, mode: 'showSelectedGroup'});
   }
 
+  inputEntry(){//in selectedGroup
+    this.setState({entry: event.target.value})
+  }
+  setWinningEntry(entry){//in selectedGroup
+    this.setState({winningEntry: entry})
+  }
+
   mainMode(){
-    this.setState({selectedGroup: null, mode: 'main'});
+    this.setState({selectedGroup: null, mode: 'main', entry: '', winningEntry: ''});
   }
 
 
@@ -268,7 +277,11 @@ class Dashboard extends React.Component {
                     usersInGroup={this.state.usersInGroup}
                     userId={this.props.userId}
                     mainMode={()=>{this.mainMode()}}
+                    entry={this.state.entry}
+                    winningEntry={this.state.winningEntry}
+                    inputEntry={()=>{this.inputEntry()}}
                     submitEntry={(userId, groupId, entry)=>{this.submitEntry(userId, groupId, entry)}}
+                    setWinningEntry={(entry)=>{this.setWinningEntry(entry)}}
                 />
     }
   }

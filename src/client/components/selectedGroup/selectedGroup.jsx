@@ -6,7 +6,6 @@ class SelectedGroup extends React.Component {
   constructor() {
     super();
     this.state = {
-        inputEntry: '',
         winBalanceArray: [],
     };
   }
@@ -21,16 +20,20 @@ class SelectedGroup extends React.Component {
   }
 
   componentDidUpdate(){
-    console.log(this.state)
+    // console.log(this.state)
   }
 
   inputEntry(){
-    this.setState({inputEntry: event.target.value})
+    this.props.inputEntry();
   }
 
 
   submitEntry(userId, groupId, entry){
     this.props.submitEntry(userId, groupId, entry);
+  }
+
+  setWinningEntry(entry){
+    this.props.setWinningEntry(entry)
   }
 
   getWinBalance(userId, friendId){
@@ -151,6 +154,8 @@ class SelectedGroup extends React.Component {
     let randomEntry = totalSample[randomIndex];//---------------------------------------------------------PULL RANDOM ENTRY
     console.log(randomEntry)
 
+    this.setWinningEntry(randomEntry)
+
 
 
   }
@@ -171,11 +176,12 @@ class SelectedGroup extends React.Component {
     return (
       <React.Fragment>
         <button onClick={()=>{this.mainMode()}}>Back to main</button>
-        <input value={this.state.inputEntry} onChange={()=>{this.inputEntry()}}/>
-        <button onClick={()=>{this.submitEntry(this.props.userId, this.props.selectedGroup.groupid, this.state.inputEntry)}}>Submit Entry</button>
+        <input value={this.props.entry} onChange={()=>{this.inputEntry()}}/>
+        <button onClick={()=>{this.submitEntry(this.props.userId, this.props.selectedGroup.groupid, this.props.entry)}}>Submit Entry</button>
         <h1>{this.props.selectedGroup.groupname}</h1>
         <button onClick={()=>{this.settle()}}>Settle!</button>
         <button onClick={()=>{this.confirmSettle()}}>Confirm Settle!</button>
+        <h3>Winning Entry: {this.props.winningEntry}</h3>
         {usersInGroup}
       </React.Fragment>
     );
