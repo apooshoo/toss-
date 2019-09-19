@@ -63,8 +63,12 @@ class SelectedGroup extends React.Component {
   // var promise = new Promise((resolve, reject)=>{a = 1+2; if(a>1){resolve('yay')}else{reject('broke!')}})
   // var promise2 = new Promise((resolve, reject)=>{a = 1+2; if(a>4){resolve('yay')}else{reject('broke!')}})
 
-//NOTE: AJAX CALLS FINISH LATE, SO I BROKE THEM UP INTO TWO PRESSES
+
+
+//////////////////////////////////////////////////////////////////////////////AJAX WIN BALANCES START///////////////////////////////////////////////////
+//NOTE: AJAX CALLS FINISH LATE, SO I BROKE THEM UP INTO TWO PRESSES-SETTLE and CONFIRMSETTLE
   settle(){
+
     this.setState({winBalanceArray: []});
 
     let pool = this.props.usersInGroup.filter(user=>{
@@ -84,7 +88,9 @@ class SelectedGroup extends React.Component {
     });
 
   }
+///////////////////////////////////////////////////////////////////////////////AJAX WIN BALANCES END////////////////////////////////////////////////
 
+//////////////////////////////////////////////////////////////////////////GENERATE WEIGHTED RANDOM CHOICE START//////////////////////////////////////////////
   confirmSettle(){
     let pool = this.props.usersInGroup.filter(user=>{
         return user.entry != null;
@@ -103,6 +109,7 @@ class SelectedGroup extends React.Component {
     //EXAMPLLE
     // let totalBalanceWithFriends = [{winbalance:3}, {winbalance:0}, {winbalance:-3}];
     //EXAMPLE
+    //ACTUAL
     let totalBalanceWithFriends = balanceWithFriends.map(balance=>{
         let sumBalancePerUser = balance.reduce((a, b)=>{
             return {winbalance: a.winbalance+b.winbalance};
@@ -110,18 +117,42 @@ class SelectedGroup extends React.Component {
         // console.log(sumBalancePerUser)
         return sumBalancePerUser
     });
+    //ACTUAL
     // console.log(balanceWithFriends)
     console.log("EACH USERS TOTALBALANCEWITHFRIENDS", totalBalanceWithFriends)
 
-    let initPercentagesPerUser = pool.map(user=>{
+    let initWeightPerUser = pool.map(user=>{
         return 100/pool.length;
     });
-    console.log(initPercentagesPerUser);
-    let adjustedPercentagesPerUser = initPercentagesPerUser.map((percentage, index)=>{
+    console.log(initWeightPerUser);
+    let adjustedWeightPerUser = initWeightPerUser.map((weight, index)=>{//------------------------------ROUND DOWN FOR EASY WEIGHTING LATER
         let amountToAdjust = totalBalanceWithFriends[index].winbalance * 3
-        return percentage - amountToAdjust;
+        return Math.floor(weight - amountToAdjust);
     });
-    console.log(adjustedPercentagesPerUser);
+    console.log(adjustedWeightPerUser);
+    let totalWeight = adjustedWeightPerUser.reduce((a, b)=>{//-------------------------------------------DENOMINATOR FOR WEIGHTING
+        return a + b;
+    });
+    console.log(totalWeight);
+    let sample = adjustedWeightPerUser.map((weight, index)=>{//------------------------------------------ENTRIES MULTIPLIED BY WEIGHT
+        let counter = 0;
+        let temp = [];
+        while (counter < weight){
+            temp.push(pool[index].entry);
+            counter ++;
+        };
+        return temp
+    });
+    let totalSample = sample.reduce((a, b)=>{//-----------------------------------------------------------JOINED ENTRIES
+        return a.concat(b)
+    })
+    console.log(totalSample)
+    let randomIndex = Math.floor(Math.random() * totalWeight);//------------------------------------------GENERATED RANDOM INDEX
+    let randomEntry = totalSample[randomIndex];//---------------------------------------------------------PULL RANDOM ENTRY
+    console.log(randomEntry)
+
+
+
   }
 
   render() {
