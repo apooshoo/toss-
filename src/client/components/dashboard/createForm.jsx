@@ -23,9 +23,9 @@ class CreateForm extends React.Component {
 
     return (
       <React.Fragment>
-        <div className="form-group">
+        <div className="form-group w-50 mx-auto">
             <input type="text" className="form-control" placeholder="Group Name" onChange={()=>{this.inputGroupName()}} value={this.state.inputGroupName}/>
-            <button className="btn btn-primary" onClick={()=>{this.createGroup()}}>Create Group</button>
+            <button className="btn btn-primary w-50" onClick={()=>{this.createGroup()}}>Create Group</button>
         </div>
       </React.Fragment>
     );

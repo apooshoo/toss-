@@ -18,9 +18,12 @@ class UsersGroups extends React.Component {
     let usersGroups;
     if(this.props.usersGroups.length > 0){
         usersGroups = this.props.usersGroups.map((group, index)=>{
-            return <div key={index}>
-                    <p>{group.groupname}</p>
-                    <button onClick={()=>{this.selectGroup(group)}}>SELECT</button>
+            return <div key={index} className="card">
+                        <div className="card-body">
+                            <h6 className="card-text">{group.groupname}</h6>
+                            <button className="btn btn-primary" onClick={()=>{this.selectGroup(group)}}>SELECT</button>
+                        </div>
+
                     </div>
         });
     };

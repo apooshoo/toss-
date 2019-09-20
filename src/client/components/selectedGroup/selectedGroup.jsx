@@ -219,11 +219,14 @@ class SelectedGroup extends React.Component {
   render() {
     // console.log("IN SELECTED GROUP", this.props.usersInGroup)
     let usersInGroup;
-    if(this.props.usersInGroup.length > 0){
+    if(this.props.usersInGroup.length != null && this.props.usersInGroup.length > 0){
         usersInGroup = this.props.usersInGroup.map((user, index)=>{
-            return <div key={index}>
-                        <p>Name: {user.username}</p>
-                        <p>Entry: {user.entry}</p>
+            return <div key={index} className="card">
+                        <div className="card-body">
+                            <h6 className="card-title">Name: {user.username}</h6>
+                            <p className="card-text">Entry: {user.entry}</p>
+                        </div>
+
                     </div>
         });
     };
@@ -232,10 +235,16 @@ class SelectedGroup extends React.Component {
 
     return (
       <React.Fragment>
-        <button onClick={()=>{this.mainMode()}}>Back to main</button>
-        <input value={this.props.entry} onChange={()=>{this.inputEntry()}}/>
-        <button onClick={()=>{this.submitEntry(this.props.userId, this.props.selectedGroup.groupid, this.props.entry)}}>Submit Entry</button>
+        <button className="btn btn-primary" style={{display: 'block'}} onClick={()=>{this.mainMode()}}>Back to main</button>
+
+
+
         <h1>{this.props.selectedGroup.groupname}</h1>
+        <div className="form-group w-50 mx-auto">
+            <input type="text" className="form-control" style={{display:'block'}} placeholder="Entry" value={this.props.entry} onChange={()=>{this.inputEntry()}}/>
+            <button className="btn btn-primary" onClick={()=>{this.submitEntry(this.props.userId, this.props.selectedGroup.groupid, this.props.entry)}}>Submit Entry</button>
+        </div>
+
         <button onClick={()=>{this.settle()}}>Settle!</button>
         <button onClick={()=>{this.confirmSettle()}}>Confirm Settle!</button>
         <h3>Winning Entry: {this.props.winningEntry}</h3>
