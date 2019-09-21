@@ -15,7 +15,7 @@ class UsersFriends extends React.Component {
 
   setButton(friend){
     if (this.props.mode === 'main'){
-        return <p>btn to create group with friend</p>
+        return <p>btn to do whatever with friend</p>
     } else if(this.props.mode === 'showSelectedGroup'){
         return <button className="btn btn-primary" onClick={()=>{this.addToGroup(friend.id, this.props.selectedGroup.id)}}>Add to group</button>
     }

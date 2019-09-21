@@ -7,6 +7,7 @@ class SelectedGroup extends React.Component {
     super();
     this.state = {
         winBalanceArray: [],
+        fairSettleMode: false,
     };
   }
 
@@ -70,7 +71,7 @@ class SelectedGroup extends React.Component {
 
 //////////////////////////////////////////////////////////////////////////////AJAX WIN BALANCES START///////////////////////////////////////////////////
 //NOTE: AJAX CALLS FINISH LATE, SO I BROKE THEM UP INTO TWO PRESSES-SETTLE and CONFIRMSETTLE
-  settle(){
+  settleMode(){
 
     this.setState({winBalanceArray: []});
 
@@ -91,7 +92,7 @@ class SelectedGroup extends React.Component {
             this.getWinBalance(user.userid, friend.userid);
         });
     });
-
+    this.setState({fairSettleMode: true});
   }
 ///////////////////////////////////////////////////////////////////////////////AJAX WIN BALANCES END////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -174,6 +175,8 @@ class SelectedGroup extends React.Component {
     losers.forEach(loser=>{//-------------------------------------------------------------------------------MINUS FROM LOSERS
         this.updateWinBalance(loser.userid, winner.userid, -1)
     })
+
+    this.setState({fairSettleMode: false});
   }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////GENERATE RANDOM WEIGHTED CHOICE END//////////////////////////////////////////////
@@ -231,6 +234,13 @@ class SelectedGroup extends React.Component {
         });
     };
 
+    let settleBtn;
+    if(this.state.fairSettleMode === false){
+        settleBtn = <button className="btn btn-success" onClick={()=>{this.settleMode()}}>Fair Settle</button>
+    } else {
+        settleBtn = <button className="btn btn-success" onClick={()=>{this.confirmSettle()}}>Confirm Settle!</button>
+    }
+
 
 
     return (
@@ -244,9 +254,7 @@ class SelectedGroup extends React.Component {
             <input type="text" className="form-control" style={{display:'block'}} placeholder="Entry" value={this.props.entry} onChange={()=>{this.inputEntry()}}/>
             <button className="btn btn-primary" onClick={()=>{this.submitEntry(this.props.userId, this.props.selectedGroup.groupid, this.props.entry)}}>Submit Entry</button>
         </div>
-
-        <button onClick={()=>{this.settle()}}>Settle!</button>
-        <button onClick={()=>{this.confirmSettle()}}>Confirm Settle!</button>
+        {settleBtn}
         <h3>Winning Entry: {this.props.winningEntry}</h3>
         {usersInGroup}
       </React.Fragment>
