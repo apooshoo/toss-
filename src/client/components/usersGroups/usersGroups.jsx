@@ -33,9 +33,13 @@ class UsersGroups extends React.Component {
 
   render() {
 
+
     let usersGroups;
     if(this.props.usersGroups.length > 0 && this.state.suggestions.length === 0){
-        usersGroups = this.props.usersGroups.map((group, index)=>{
+        let sortByUpdated = this.props.usersGroups.sort((a, b)=>{
+            return (new Date(a.updated_at)) - (new Date(b.updated_at))
+        })
+        usersGroups = sortByUpdated.map((group, index)=>{
             return <div key={index} className="card">
                         <div className="card-body">
                             <h6 className="card-text">{group.groupname}</h6>

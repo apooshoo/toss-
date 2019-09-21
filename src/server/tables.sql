@@ -12,7 +12,9 @@ CREATE TABLE IF NOT EXISTS users (
 
 CREATE TABLE IF NOT EXISTS groups (
   id SERIAL PRIMARY KEY,
-  groupname TEXT
+  groupname TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
   );
 
 CREATE TABLE IF NOT EXISTS users_groups (
