@@ -7,6 +7,8 @@ import styles from './style.scss';
 import UsersGroups from '../usersGroups/usersGroups';
 import SelectedGroup from '../selectedGroup/selectedGroup';
 import UsersFriends from '../usersFriends/usersFriends';
+import AddFriends from '../addFriends/addFriends';
+import SeePending from '../seePending/seePending';
 
 import CreateForm from './createForm';
 
@@ -15,9 +17,17 @@ class Dashboard extends React.Component {
   constructor() {
     super();
     this.state = {
-        mode: 'main',
+        mode: 'main', //showSelectedGroup
+        addFriendsMode: false,
+        seePendingMode: false,
+
+        allUsers: [],
+
         usersGroups: [],
         usersFriends: [],
+        pendingSent: [],
+        pendingReceived: [],
+
         inputGroupName: '',
 
         selectedGroup: null,
@@ -28,6 +38,7 @@ class Dashboard extends React.Component {
   }
 
   componentDidMount(){
+    this.getAllUsers();
     this.getUsersGroups(this.props.userId);
     this.getUsersFriends(this.props.userId);
   }
@@ -153,8 +164,12 @@ class Dashboard extends React.Component {
       } else {
         console.log('found groups and saving to state!')
         responseData.map(friend=>{
-            dashboardThis.setState({usersFriends: [...dashboardThis.state.usersFriends.concat(friend)]});
-        })
+            if(friend.confirmed === true){
+                dashboardThis.setState({usersFriends: [...dashboardThis.state.usersFriends.concat(friend)]});
+            } else if (friend.confirmed === false){
+                dashboardThis.setState({pendingSent: [...dashboardThis.state.pendingSent.concat(friend)]});
+            }
+        });
         // dashboardThis.setState({currentGroupUsers: [...this.state.currentGroupUsers].concat(responseData)})
       }
     });
@@ -286,6 +301,142 @@ class Dashboard extends React.Component {
     }
   }
 
+////////////////////////////////////////////////////////////FRIENDS COL//////////////////////////////////////////////////
+  toggleAddFriendsMode(){
+    this.setState({addFriendsMode: !this.state.addFriendsMode, seePendingMode: false});
+  }
+
+  toggleSeePendingMode(){
+    this.setState({seePendingMode: !this.state.seePendingMode, addFriendsMode: false});
+  }
+
+  getAllUsers(){
+    console.log('getting all users');
+
+    var request = new XMLHttpRequest();
+    var dbThis = this;
+
+    request.addEventListener("load", function(){
+        // console.log(this.responseText)
+      let responseData = JSON.parse( this.responseText );
+      // console.log('resdata:', responseData)
+      if (responseData === null){
+        console.log('no users found!');
+      } else {
+        console.log("REZDATA for getAllUsers", responseData)
+        dbThis.setState({allUsers: responseData})
+        // let allUsers = [];
+        // responseData.map(user=>{
+        //     usersInGroup.push(user);
+        // })
+        // selectedGroupThis.setState({usersInGroup: usersInGroup});
+      }
+    });
+
+
+    request.open("GET", `/users`);
+    request.send();
+  }
+
+  /////////////////////////////////////////////////////ADD FRIENDS//////////////////////////////////////////////////////
+  addFriend(userId, friendId){
+    var request = new XMLHttpRequest();
+    var dbThis = this;
+
+    request.addEventListener("load", function(){
+        // console.log(this.responseText)
+      let responseData = JSON.parse( this.responseText );
+      // console.log('resdata:', responseData)
+      if (responseData === null){
+        alert('Request already sent!')
+      } else {
+        console.log('REZDATA:', responseData)
+        let addedId = responseData.friendid;
+        let addedFriend = dbThis.state.allUsers.find(user=>{
+            return user.id === addedId;
+        });
+        dbThis.setState({pendingSent: dbThis.state.pendingSent.concat(addedFriend)});
+      };
+    });
+
+    let data = {
+        userId: userId,
+        friendId: friendId,
+    };
+    request.open("POST", '/users/friends/new');
+    request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    request.send(JSON.stringify(data));
+  }
+  ///////////////////////////////////////////////////ADD FRIENDS END//////////////////////////////////////////////////
+
+  ///////////////////////////////////////////////////////ACCEPT FRIEND///////////////////////////////////////////////
+
+  getInvitesReceived(userId){
+    //do get users friends in reverse- get all users who are pending against you
+    console.log('getting all received pending invites');
+    var request = new XMLHttpRequest();
+    var spThis = this;
+
+    request.addEventListener("load", function(){
+      let responseData = JSON.parse( this.responseText );
+      if (responseData === null){
+        console.log('no groups found!');
+      } else {
+        console.log('got pending received invites!')
+        console.log(responseData)
+        let pendingReceived = responseData.filter(friend=>{
+            return friend.confirmed === false;
+        });
+        spThis.setState({pendingReceived: pendingReceived});
+      };
+    });
+
+
+    request.open("GET", `/users/${userId}/friends/received`);
+    request.send();
+  }
+
+  ///////////////////////////////////////////////////////ACCEPT FRIEND END////////////////////////////////////////////
+
+
+  setFriendsCol(){
+    if(this.state.addFriendsMode === false && this.state.seePendingMode === false){
+        return <React.Fragment>
+                    <button className="btn btn-primary" onClick={()=>{this.toggleAddFriendsMode()}}>Add a Friend</button>
+                    <button className="btn btn-info" onClick={()=>{this.toggleSeePendingMode()}}>See Pending</button>
+                    <UsersFriends
+                        usersFriends={this.state.usersFriends}
+                        selectedGroup={this.state.selectedGroup}
+                        addToGroup={(userId, groupId)=>{this.addToGroup(userId, groupId)}}
+                        mode={this.state.mode}
+                    />
+                </React.Fragment>
+    } else if (this.state.addFriendsMode === true && this.state.seePendingMode === false){
+        return <React.Fragment>
+                    <button className="btn btn-primary" onClick={()=>{this.toggleAddFriendsMode()}}>See Friends</button>
+                    <button className="btn btn-info" onClick={()=>{this.toggleSeePendingMode()}}>See Pending</button>
+                    <AddFriends
+                        allUsers={this.state.allUsers}
+                        userId={this.props.userId}
+                        addFriend={(userId, friendId)=>{this.addFriend(userId, friendId)}}
+                    />
+                </React.Fragment>
+    } else if (this.state.seePendingMode === true){
+        return <React.Fragment>
+                    <button className="btn btn-primary" onClick={()=>{this.toggleAddFriendsMode()}}>See Friends</button>
+                    <button className="btn btn-primary" onClick={()=>{this.toggleAddFriendsMode()}}>Add a Friend</button>
+                    <SeePending
+                        userId={this.props.userId}
+                        allUsers={this.state.allUsers}
+                        getInvitesReceived={(userId)=>{this.getInvitesReceived(userId)}}
+                        pendingSent={this.state.pendingSent}
+                        pendingReceived={this.state.pendingReceived}
+                    />
+                </React.Fragment>
+    }
+  }
+////////////////////////////////////////////////////////FRIENDS COL END//////////////////////////////////////////////////////
+
 
   render() {
 
@@ -304,13 +455,7 @@ class Dashboard extends React.Component {
             </div>
 
             <div className="rightCol col-3">
-                <UsersFriends
-                    usersFriends={this.state.usersFriends}
-                    selectedGroup={this.state.selectedGroup}
-                    addToGroup={(userId, groupId)=>{this.addToGroup(userId, groupId)}}
-                    mode={this.state.mode}
-
-                />
+                {this.setFriendsCol()}
             </div>
 
           </div>

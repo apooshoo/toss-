@@ -29,10 +29,10 @@ INSERT INTO users_groups (userId, groupId) VALUES
 (4, 2),
 (5, 1);
 
-INSERT INTO users_friends (userId, friendId) VALUES
-(1, 2),
-(2, 1),
-(1, 3),
-(3, 1),
-(2, 3),
-(3, 2);
+INSERT INTO users_friends (userId, friendId, confirmed) VALUES
+(1, 2, true),
+(2, 1, true),
+(1, 3, true),
+(3, 1, true),
+(2, 3, true),
+(3, 2, true);

@@ -1,5 +1,18 @@
 module.exports = (db) => {
 
+  let getAll = (req, res) => {
+    db.toss.getAll((err, result)=>{
+        if(err){
+            console.log('err,', err);
+        } else if (result === null){
+            res.send('null');
+        } else {
+            // console.log('sending:', result[0])
+            res.send(result);
+        };
+    });
+  };
+
   let login = (req, res) => {
     // console.log('in login ctrlr');
     // console.log("body:", req.body);
@@ -152,8 +165,39 @@ module.exports = (db) => {
     });
   };
 
+  let getInvitesReceived = (req, res) => {
+    console.log('in getInvitesReceived ctrlr');
+    // console.log("params:", req.params);
+    db.toss.getInvitesReceived(req.params, (err, result)=>{
+        if(err){
+            console.log('err,', err);
+        } else if (result === null){
+            res.send('null');
+        } else {
+            console.log('sending back:', result)
+            res.send(result);
+        };
+    });
+  };
+
+  let addNewFriend = (req, res) => {
+    // console.log("params:", req.params);
+    db.toss.addNewFriend(req.body, (err, result)=>{
+        if(err){
+            console.log('err,', err);
+        } else if (result === null){
+            res.send('null');
+        } else {
+            console.log('sending back:', result[0])
+            res.send(result[0]);
+        };
+    });
+  };
+
+
 
   return {
+    getAll : getAll,
     login : login,
     register : register,
     getUsersGroups : getUsersGroups,
@@ -163,7 +207,9 @@ module.exports = (db) => {
     newGroupEntry : newGroupEntry,
     getWinBalance : getWinBalance,
     editWinBalance : editWinBalance,
-    getUsersFriends : getUsersFriends
+    getUsersFriends : getUsersFriends,
+    getInvitesReceived : getInvitesReceived,
+    addNewFriend : addNewFriend
   }
 
 };

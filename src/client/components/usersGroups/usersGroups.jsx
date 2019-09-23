@@ -65,7 +65,7 @@ class UsersGroups extends React.Component {
     return (
       <React.Fragment>
           <div>
-            <input type="search" placeholder="Search Groups" className="form-control" value={this.state.userInput} onChange={()=>{this.onUserInput()}}/>
+            <input type="search" placeholder="Search your groups" className="form-control" value={this.state.userInput} onChange={()=>{this.onUserInput()}}/>
           </div>
           <div>
             {usersGroups}

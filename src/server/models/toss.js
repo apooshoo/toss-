@@ -5,6 +5,20 @@
  */
 module.exports = (dbPoolInstance) => {
 
+  let getAll = (callback) => {
+    console.log('in getAll model');
+    const query = `SELECT * FROM users`;
+    dbPoolInstance.query(query, (err, result)=>{
+        if(err){
+            callback(err, null);
+        } else if (result.rows.length > 0){
+            callback(null, result.rows);
+        } else {
+            callback(null, null);
+        }
+    });
+  };
+
   let login = (data, callback) => {
     console.log('in login model');
     let values = [data.inputUsername, data.inputPassword];
@@ -179,7 +193,44 @@ module.exports = (dbPoolInstance) => {
     });
   };
 
+  let getInvitesReceived = (data, callback) => {
+    console.log('in getInvitesReceived model');
+    let values = [data.userId];
+    console.log('values:', values)
+
+    const query = `SELECT * FROM users_friends INNER JOIN users ON (users_friends.friendId = users.id) WHERE users_friends.friendId = $1`;
+    dbPoolInstance.query(query, values, (err, result) => {
+        if(err){
+            callback(err, null);
+        } else if (result.rows.length > 0){
+            callback(null, result.rows);
+
+        } else {
+            callback(null, null);
+        }
+    });
+  };
+
+  let addNewFriend = (data, callback) => {
+    console.log('in addNewFriend model');
+    let values = [data.userId, data.friendId];
+    console.log('values:', values)
+
+    const query = `INSERT INTO users_friends (userId, friendId) SELECT $1, $2 WHERE NOT EXISTS (SELECT * FROM users_friends WHERE userId = $1 AND friendId = $2) RETURNING *`;
+    dbPoolInstance.query(query, values, (err, result) => {
+        if(err){
+            callback(err, null);
+        } else if (result.rows.length > 0){
+            callback(null, result.rows);
+
+        } else {
+            callback(null, null);
+        }
+    });
+  };
+
   return {
+    getAll,
     login,
     register,
     getUsersGroups,
@@ -189,6 +240,8 @@ module.exports = (dbPoolInstance) => {
     newGroupEntry,
     getWinBalance,
     editWinBalance,
-    getUsersFriends
+    getUsersFriends,
+    getInvitesReceived,
+    addNewFriend
   };
 };

@@ -28,5 +28,6 @@ CREATE TABLE IF NOT EXISTS users_friends (
   id SERIAL PRIMARY KEY,
   userId INTEGER,
   friendId INTEGER,
-  winBalance INTEGER DEFAULT 0
+  winBalance INTEGER DEFAULT 0,
+  confirmed BOOLEAN DEFAULT FALSE
   );

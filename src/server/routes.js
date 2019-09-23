@@ -2,6 +2,8 @@ module.exports = (app, db) => {
 
   const toss = require('./controllers/toss')(db);
 
+  app.get('/users', toss.getAll);
+
   app.post('/users/login', toss.login);
   app.post('/users/register', toss.register);
 
@@ -14,5 +16,9 @@ module.exports = (app, db) => {
 
   app.get('/users/:userId/:friendId/balance', toss.getWinBalance);
   app.post('/users/balance', toss.editWinBalance);
-  app.get('/users/:userId/friends', toss.getUsersFriends)
+  app.get('/users/:userId/friends', toss.getUsersFriends);
+app.get('/users/:userId/friends/received', toss.getInvitesReceived);
+
+  app.post('/users/friends/new', toss.addNewFriend);
+
 };
