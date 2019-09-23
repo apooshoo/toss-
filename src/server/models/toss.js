@@ -229,6 +229,25 @@ module.exports = (dbPoolInstance) => {
     });
   };
 
+  let deleteFriend = (data, callback) => {
+    console.log('in deleteFriend model');
+    let values = [data.userId, data.friendId];
+    console.log('values:', values)
+
+    const query = `DELETE FROM users_friends WHERE userId = $1 AND friendId = $2 RETURNING *`;
+    dbPoolInstance.query(query, values, (err, result) => {
+        if(err){
+            callback(err, null);
+        } else if (result.rows.length > 0){
+            callback(null, result.rows);
+
+        } else {
+            callback(null, null);
+        }
+    });
+  };
+
+
   return {
     getAll,
     login,
@@ -242,6 +261,7 @@ module.exports = (dbPoolInstance) => {
     editWinBalance,
     getUsersFriends,
     getInvitesReceived,
-    addNewFriend
+    addNewFriend,
+    deleteFriend
   };
 };

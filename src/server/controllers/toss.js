@@ -194,6 +194,20 @@ module.exports = (db) => {
     });
   };
 
+  let deleteFriend = (req, res) => {
+    // console.log("params:", req.params);
+    db.toss.deleteFriend(req.body, (err, result)=>{
+        if(err){
+            console.log('err,', err);
+        } else if (result === null){
+            res.send('null');
+        } else {
+            console.log('sending back:', result[0])
+            res.send(result[0]);
+        };
+    });
+  };
+
 
 
   return {
@@ -209,7 +223,8 @@ module.exports = (db) => {
     editWinBalance : editWinBalance,
     getUsersFriends : getUsersFriends,
     getInvitesReceived : getInvitesReceived,
-    addNewFriend : addNewFriend
+    addNewFriend : addNewFriend,
+    deleteFriend : deleteFriend
   }
 
 };

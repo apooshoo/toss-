@@ -17,8 +17,9 @@ module.exports = (app, db) => {
   app.get('/users/:userId/:friendId/balance', toss.getWinBalance);
   app.post('/users/balance', toss.editWinBalance);
   app.get('/users/:userId/friends', toss.getUsersFriends);
-app.get('/users/:userId/friends/received', toss.getInvitesReceived);
+  app.get('/users/:userId/friends/received', toss.getInvitesReceived);
 
   app.post('/users/friends/new', toss.addNewFriend);
+  app.post('/users/friends/delete', toss.deleteFriend);
 
 };

@@ -13,6 +13,10 @@ class SeePending extends React.Component {
     this.props.getInvitesReceived(userId);
   }
 
+  deleteFriend(userId, friendId){
+    this.props.deleteFriend(userId, friendId);
+  }
+
   componentDidMount(){
     this.getInvitesReceived(this.props.userId)
   }
@@ -26,7 +30,7 @@ class SeePending extends React.Component {
             return <div key={index} className="card">
                         <div className="card-body">
                             <h6 className="card-text">{userSentTo.username}</h6>
-                            <button className="btn btn-primary">Cancel(notdone)</button>
+                            <button className="btn btn-primary" onClick={()=>{this.deleteFriend(this.props.userId, userSentTo.friendid)}}>Cancel</button>
                         </div>
                     </div>
         });

@@ -396,6 +396,43 @@ class Dashboard extends React.Component {
     request.send();
   }
 
+  deleteFriend(userId, friendId){
+    var request = new XMLHttpRequest();
+    var dbThis = this;
+
+    request.addEventListener("load", function(){
+        // console.log(this.responseText)
+      let responseData = JSON.parse( this.responseText );
+      // console.log('resdata:', responseData)
+      if (responseData === null){
+        alert('Request already sent!')
+      } else {
+        console.log('DELETED:', responseData)
+        let pendingSent = [...dbThis.state.pendingSent].filter(friend=>{
+            return friend.userid != responseData.userid;
+        })
+        dbThis.setState({pendingSent: pendingSent});
+        // let addedId = responseData.friendid;
+        // let addedFriend = dbThis.state.allUsers.find(user=>{
+        //     return user.id === addedId;
+        // });
+        // dbThis.setState({pendingSent: dbThis.state.pendingSent.concat(addedFriend)});
+      };
+    });
+
+    let data = {
+        userId: userId,
+        friendId: friendId,
+    };
+    request.open("POST", '/users/friends/delete');
+    request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    request.send(JSON.stringify(data));
+  }
+
+  // acceptInvite(userId, friendId){
+
+  // }
+
   ///////////////////////////////////////////////////////ACCEPT FRIEND END////////////////////////////////////////////
 
 
@@ -429,6 +466,7 @@ class Dashboard extends React.Component {
                         userId={this.props.userId}
                         allUsers={this.state.allUsers}
                         getInvitesReceived={(userId)=>{this.getInvitesReceived(userId)}}
+                        deleteFriend={(userId, friendId)=>{this.deleteFriend(userId, friendId)}}
                         pendingSent={this.state.pendingSent}
                         pendingReceived={this.state.pendingReceived}
                     />

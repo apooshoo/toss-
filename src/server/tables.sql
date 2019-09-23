@@ -29,5 +29,6 @@ CREATE TABLE IF NOT EXISTS users_friends (
   userId INTEGER,
   friendId INTEGER,
   winBalance INTEGER DEFAULT 0,
-  confirmed BOOLEAN DEFAULT FALSE
+  confirmed BOOLEAN DEFAULT FALSE,
+  ignored BOOLEAN DEFAULT FALSE
   );
