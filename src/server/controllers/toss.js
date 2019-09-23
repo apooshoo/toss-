@@ -188,8 +188,25 @@ module.exports = (db) => {
         } else if (result === null){
             res.send('null');
         } else {
-            console.log('sending back:', result[0])
-            res.send(result[0]);
+            console.log('sent invite', result[0])
+            // res.send(result[0]);
+            let data = {
+                userId: req.body.userId
+            };
+            db.toss.getUsersFriends(data, (err, result2)=>{
+                if(err){
+                    console.log('err,', err);
+                } else if (result === null){
+                    res.send('null');
+                } else {
+                    console.log('usersfriends after sent invite:', result2)
+                    let returnData = {
+                        added: result[0],
+                        currentFriends: result2
+                    };
+                    res.send(returnData);
+                };
+            });
         };
     });
   };

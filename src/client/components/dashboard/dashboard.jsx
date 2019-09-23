@@ -350,11 +350,12 @@ class Dashboard extends React.Component {
       if (responseData === null){
         alert('Request already sent!')
       } else {
-        console.log('REZDATA:', responseData)
-        let addedId = responseData.friendid;
-        let addedFriend = dbThis.state.allUsers.find(user=>{
-            return user.id === addedId;
+        console.log('sent invite to friend:', responseData.added)
+        let addedId = responseData.added.friendid;
+        let addedFriend = responseData.currentFriends.find(user=>{
+            return user.friendid === addedId;
         });
+        console.log('added:', addedFriend)
         dbThis.setState({pendingSent: dbThis.state.pendingSent.concat(addedFriend)});
       };
     });
@@ -373,7 +374,7 @@ class Dashboard extends React.Component {
 
   getInvitesReceived(userId){
     //do get users friends in reverse- get all users who are pending against you
-    console.log('getting all received pending invites');
+    // console.log('getting all received pending invites');
     var request = new XMLHttpRequest();
     var spThis = this;
 
@@ -383,7 +384,7 @@ class Dashboard extends React.Component {
         console.log('no groups found!');
       } else {
         console.log('got pending received invites!')
-        console.log(responseData)
+        // console.log(responseData)
         let pendingReceived = responseData.filter(friend=>{
             return friend.confirmed === false;
         });
@@ -447,11 +448,19 @@ class Dashboard extends React.Component {
       } else {
         console.log('DELETED:', responseData)
         let pendingSent = [...dbThis.state.pendingSent].filter(friend=>{
-            return friend.userid != responseData.userid;
+            return friend.friendid != responseData.friendid;
         });
         dbThis.setState({pendingSent: pendingSent});
       };
     });
+//     confirmed: false
+// friendid: 6
+// id: 6
+// ignored: false
+// password: "password"
+// userid: 1
+// username: "theodore"
+// winbalance: 0
 
     let data = {
         userId: userId,
