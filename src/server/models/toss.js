@@ -229,6 +229,42 @@ module.exports = (dbPoolInstance) => {
     });
   };
 
+  let confirmFriend = (data, callback) => {
+    console.log('in confirmfriend model');
+    let values = [data.userId, data.friendId];
+    console.log('values:', values)
+
+    const query = `UPDATE users_friends SET confirmed = true WHERE userId = $1 AND friendId = $2 RETURNING *`;
+    dbPoolInstance.query(query, values, (err, result) => {
+        if(err){
+            callback(err, null);
+        } else if (result.rows.length > 0){
+            callback(null, result.rows);
+
+        } else {
+            callback(null, null);
+        }
+    });
+  };
+
+  let confirmBack = (data, callback) => {
+    console.log('in confirmBack model');
+    let values = [data.userId, data.friendId, true];
+    console.log('values:', values)
+
+    const query = `INSERT INTO users_friends (userId, friendId, confirmed) VALUES ($1, $2, $3)  RETURNING *`;
+    dbPoolInstance.query(query, values, (err, result) => {
+        if(err){
+            callback(err, null);
+        } else if (result.rows.length > 0){
+            callback(null, result.rows);
+
+        } else {
+            callback(null, null);
+        }
+    });
+  };
+
   let deleteFriend = (data, callback) => {
     console.log('in deleteFriend model');
     let values = [data.userId, data.friendId];
@@ -262,6 +298,8 @@ module.exports = (dbPoolInstance) => {
     getUsersFriends,
     getInvitesReceived,
     addNewFriend,
+    confirmFriend,
+    confirmBack,
     deleteFriend
   };
 };

@@ -13,6 +13,10 @@ class SeePending extends React.Component {
     this.props.getInvitesReceived(userId);
   }
 
+  acceptInvite(userSentFromId, userReceivingId){
+    this.props.acceptInvite(userSentFromId, userReceivingId);
+  }
+
   deleteFriend(userId, friendId){
     this.props.deleteFriend(userId, friendId);
   }
@@ -45,7 +49,8 @@ class SeePending extends React.Component {
             return <div key={index} className="card">
                         <div className="card-body">
                             <h6 className="card-text">{userReceivedFrom.username}</h6>
-                            <button className="btn btn-primary">Acc/Rej(notdone)</button>
+                            <button className="btn btn-primary" onClick={()=>{this.acceptInvite(userReceivedFrom.id, userSentTo.friendid)}}>Accept</button>
+                            <button className="btn btn-primary">Rej(notdone)</button>
                         </div>
                     </div>
         });

@@ -396,6 +396,44 @@ class Dashboard extends React.Component {
     request.send();
   }
 
+  acceptInvite(userSentFromId, userReceivingId){// will confirm sender's request and send back a confirmed request too
+    var request = new XMLHttpRequest();
+    var dbThis = this;
+
+    request.addEventListener("load", function(){
+        // console.log(this.responseText)
+      let responseData = JSON.parse( this.responseText );
+      // console.log('resdata:', responseData)
+      if (responseData === null){
+        alert('Request already sent!')
+      } else {
+        console.log('REZDATA from acceptInvite:', responseData)
+        let filteredAddedFriend = [...dbThis.state.pendingReceived].filter(user=>{
+            return user.userid != responseData.confirmed.userid;
+        });
+        dbThis.setState({pendingReceived: filteredAddedFriend});
+        // let addedId = responseData.friendid;
+        // let addedFriend = dbThis.state.allUsers.find(user=>{
+        //     return user.id === addedId;
+        // });
+        // dbThis.setState({pendingSent: dbThis.state.pendingSent.concat(addedFriend)});
+      };
+    });
+
+    let data = {
+        userId: userSentFromId,
+        friendId: userReceivingId
+    };
+    request.open("POST", '/users/friends/confirm');
+    request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    request.send(JSON.stringify(data));
+  }
+// confirmBack: {id: 11, userid: 4, friendid: 1, winbalance: 0, confirmed: true}
+// confirmed: {id: 10, userid: 1, friendid: 4, winbalance: 0, confirmed: true}
+
+  ///////////////////////////////////////////////////////ACCEPT FRIEND END////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////CANCEL OR DELETE FRIEND////////////////////////////////////////
   deleteFriend(userId, friendId){
     var request = new XMLHttpRequest();
     var dbThis = this;
@@ -410,13 +448,8 @@ class Dashboard extends React.Component {
         console.log('DELETED:', responseData)
         let pendingSent = [...dbThis.state.pendingSent].filter(friend=>{
             return friend.userid != responseData.userid;
-        })
+        });
         dbThis.setState({pendingSent: pendingSent});
-        // let addedId = responseData.friendid;
-        // let addedFriend = dbThis.state.allUsers.find(user=>{
-        //     return user.id === addedId;
-        // });
-        // dbThis.setState({pendingSent: dbThis.state.pendingSent.concat(addedFriend)});
       };
     });
 
@@ -429,11 +462,10 @@ class Dashboard extends React.Component {
     request.send(JSON.stringify(data));
   }
 
-  // acceptInvite(userId, friendId){
+/////////////////////////////////////////////////////////////CANCEL OR DELETE FRIEND END////////////////////////////////////////
 
-  // }
 
-  ///////////////////////////////////////////////////////ACCEPT FRIEND END////////////////////////////////////////////
+
 
 
   setFriendsCol(){
@@ -466,6 +498,7 @@ class Dashboard extends React.Component {
                         userId={this.props.userId}
                         allUsers={this.state.allUsers}
                         getInvitesReceived={(userId)=>{this.getInvitesReceived(userId)}}
+                        acceptInvite={(userSentFromId, userReceivingId)=>{this.acceptInvite(userSentFromId, userReceivingId)}}
                         deleteFriend={(userId, friendId)=>{this.deleteFriend(userId, friendId)}}
                         pendingSent={this.state.pendingSent}
                         pendingReceived={this.state.pendingReceived}

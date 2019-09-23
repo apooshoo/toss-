@@ -20,6 +20,7 @@ module.exports = (app, db) => {
   app.get('/users/:userId/friends/received', toss.getInvitesReceived);
 
   app.post('/users/friends/new', toss.addNewFriend);
+  app.post('/users/friends/confirm', toss.confirmFriend);
   app.post('/users/friends/delete', toss.deleteFriend);
 
 };

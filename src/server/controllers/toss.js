@@ -194,6 +194,42 @@ module.exports = (db) => {
     });
   };
 
+  let confirmFriend = (req, res) => {
+    console.log('in confirmFriend ctrlr')
+    console.log(req.body)
+    // console.log("params:", req.params);
+    db.toss.confirmFriend(req.body, (err, result)=>{
+        if(err){
+            console.log('err,', err);
+        } else if (result === null){
+            res.send('null');
+        } else {
+            console.log('edited', result[0])
+
+            // res.send(result[0]);
+            let data = {
+                userId: req.body.friendId,
+                friendId: req.body.userId
+            }
+            db.toss.confirmBack(data, (err, result2)=>{
+                if(err){
+                    console.log('err,', err);
+                } else if (result === null){
+                    res.send('null');
+                } else {
+                    console.log('added back:', result2[0])
+                    let returnData = {
+                        confirmed: result[0],
+                        confirmBack: result2[0]
+                    };
+                    console.log('sending back', returnData)
+                    res.send(returnData);
+                };
+            });
+        };
+    });
+  };
+
   let deleteFriend = (req, res) => {
     // console.log("params:", req.params);
     db.toss.deleteFriend(req.body, (err, result)=>{
@@ -224,6 +260,7 @@ module.exports = (db) => {
     getUsersFriends : getUsersFriends,
     getInvitesReceived : getInvitesReceived,
     addNewFriend : addNewFriend,
+    confirmFriend : confirmFriend,
     deleteFriend : deleteFriend
   }
 
