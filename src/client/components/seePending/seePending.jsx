@@ -9,6 +9,10 @@ class SeePending extends React.Component {
     };
   }
 
+  getUsersFriends(userId){
+    this.props.getUsersFriends(userId);
+  }
+
   getInvitesReceived(userId){
     this.props.getInvitesReceived(userId);
   }
@@ -25,7 +29,7 @@ class SeePending extends React.Component {
     this.getInvitesReceived(this.props.userId)
   }
 
-
+//to refresh pendingSent, redo getUsersFriends, to refresh pendingReceived, redo getInvitesReceived
 
   render() {
     let pendingSent;
@@ -58,6 +62,10 @@ class SeePending extends React.Component {
 
     return (
       <React.Fragment>
+        <button className="btn btn-primary" onClick={()=>{
+            this.getUsersFriends(this.props.userId);
+            this.getInvitesReceived(this.props.userId);
+        }}>REFRESH LIST</button>
         <h6>Invites Sent</h6>
         <div>
             {pendingSent}

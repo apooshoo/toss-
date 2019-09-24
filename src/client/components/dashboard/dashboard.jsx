@@ -506,6 +506,7 @@ class Dashboard extends React.Component {
                     <SeePending
                         userId={this.props.userId}
                         allUsers={this.state.allUsers}
+                        getUsersFriends={(userId)=>{this.getUsersFriends(userId)}}
                         getInvitesReceived={(userId)=>{this.getInvitesReceived(userId)}}
                         acceptInvite={(userSentFromId, userReceivingId)=>{this.acceptInvite(userSentFromId, userReceivingId)}}
                         deleteFriend={(userId, friendId)=>{this.deleteFriend(userId, friendId)}}
