@@ -18,8 +18,7 @@ class Dashboard extends React.Component {
     super();
     this.state = {
         mode: 'main', //showSelectedGroup
-        addFriendsMode: false,
-        seePendingMode: false,
+        friendsMode: 'seeFriends',
 
         allUsers: [],
 
@@ -304,11 +303,15 @@ class Dashboard extends React.Component {
 
 ////////////////////////////////////////////////////////////FRIENDS COL//////////////////////////////////////////////////
   toggleAddFriendsMode(){
-    this.setState({addFriendsMode: !this.state.addFriendsMode, seePendingMode: false});
+    this.setState({friendsMode: 'addFriends'});
+  }
+
+  toggleSeeFriendsMode(){
+    this.setState({friendsMode: 'seeFriends'})
   }
 
   toggleSeePendingMode(){
-    this.setState({seePendingMode: !this.state.seePendingMode, addFriendsMode: false});
+    this.setState({friendsMode: 'seePending'});
   }
 
   getAllUsers(){
@@ -479,10 +482,11 @@ class Dashboard extends React.Component {
 
 
   setFriendsCol(){
-    if(this.state.addFriendsMode === false && this.state.seePendingMode === false){
+    if(this.state.friendsMode === 'seeFriends'){
         return <React.Fragment>
-                    <button className="btn btn-primary" onClick={()=>{this.toggleAddFriendsMode()}}>Add a Friend</button>
-                    <button className="btn btn-info" onClick={()=>{this.toggleSeePendingMode()}}>See Pending</button>
+                    <button className="btn btn-info" onClick={()=>{this.toggleSeeFriendsMode()}}>Friends</button>
+                    <button className="btn btn-primary" onClick={()=>{this.toggleAddFriendsMode()}}>Add</button>
+                    <button className="btn btn-primary" onClick={()=>{this.toggleSeePendingMode()}}>Pending</button>
                     <UsersFriends
                         usersFriends={this.state.usersFriends}
                         selectedGroup={this.state.selectedGroup}
@@ -490,20 +494,22 @@ class Dashboard extends React.Component {
                         mode={this.state.mode}
                     />
                 </React.Fragment>
-    } else if (this.state.addFriendsMode === true && this.state.seePendingMode === false){
+    } else if (this.state.friendsMode === 'addFriends'){
         return <React.Fragment>
-                    <button className="btn btn-primary" onClick={()=>{this.toggleAddFriendsMode()}}>See Friends</button>
-                    <button className="btn btn-info" onClick={()=>{this.toggleSeePendingMode()}}>See Pending</button>
+                    <button className="btn btn-primary" onClick={()=>{this.toggleSeeFriendsMode()}}>Friends</button>
+                    <button className="btn btn-info" onClick={()=>{this.toggleAddFriendsMode()}}>Add</button>
+                    <button className="btn btn-primary" onClick={()=>{this.toggleSeePendingMode()}}>Pending</button>
                     <AddFriends
                         allUsers={this.state.allUsers}
                         userId={this.props.userId}
                         addFriend={(userId, friendId)=>{this.addFriend(userId, friendId)}}
                     />
                 </React.Fragment>
-    } else if (this.state.seePendingMode === true){
+    } else if (this.state.friendsMode === 'seePending'){
         return <React.Fragment>
-                    <button className="btn btn-primary" onClick={()=>{this.toggleAddFriendsMode()}}>See Friends</button>
-                    <button className="btn btn-primary" onClick={()=>{this.toggleAddFriendsMode()}}>Add a Friend</button>
+                    <button className="btn btn-primary" onClick={()=>{this.toggleSeeFriendsMode()}}>Friends</button>
+                    <button className="btn btn-primary" onClick={()=>{this.toggleAddFriendsMode()}}>Add</button>
+                    <button className="btn btn-info" onClick={()=>{this.toggleSeePendingMode()}}>Pending</button>
                     <SeePending
                         userId={this.props.userId}
                         allUsers={this.state.allUsers}
