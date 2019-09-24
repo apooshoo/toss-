@@ -7,7 +7,7 @@ class App extends React.Component {
   constructor() {
     super();
     this.state = {
-      userId: 1, //set to null for full app
+      userId: null, //set to null for full app
       inputUsername: '',
       inputPassword: '',
 

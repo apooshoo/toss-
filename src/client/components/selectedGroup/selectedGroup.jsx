@@ -11,6 +11,10 @@ class SelectedGroup extends React.Component {
     };
   }
 
+  getGroupUsers(groupId){
+    this.props.getGroupUsers(groupId);
+  }
+
   mainMode(){
     this.props.mainMode();
   }
@@ -218,7 +222,7 @@ class SelectedGroup extends React.Component {
 ////////////////////////////////////////////////////////////////////////////UPDATE WIN BALANCE AFTER SETTLE END///////////////////////////////////////////
 
 
-
+//to refresh entries, redo getGroupUsers
   render() {
     // console.log("IN SELECTED GROUP", this.props.usersInGroup)
     let usersInGroup;
@@ -246,8 +250,7 @@ class SelectedGroup extends React.Component {
     return (
       <React.Fragment>
         <button className="btn btn-primary" style={{display: 'block'}} onClick={()=>{this.mainMode()}}>Back to main</button>
-
-
+        <button className="btn btn-primary" style={{display: 'block'}} onClick={()=>{this.getGroupUsers(this.props.selectedGroup.groupid)}}>REFRESH</button>
 
         <h1>{this.props.selectedGroup.groupname}</h1>
         <div className="form-group w-50 mx-auto">

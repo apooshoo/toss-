@@ -297,6 +297,7 @@ class Dashboard extends React.Component {
                     inputEntry={()=>{this.inputEntry()}}
                     submitEntry={(userId, groupId, entry)=>{this.submitEntry(userId, groupId, entry)}}
                     setWinningEntry={(entry)=>{this.setWinningEntry(entry)}}
+                    getGroupUsers={(groupId)=>this.getGroupUsers(groupId)}
                 />
     }
   }
