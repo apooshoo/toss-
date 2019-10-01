@@ -82,7 +82,7 @@ class App extends React.Component {
         return (
           <div className="everything">
             <nav className="navbar navbar-expand-lg sticky-top d-print navbar-dark bg-dark row" id="navbar">
-                    <a className="navbar-brand" href="#"><img src="/spinningcoin.jpg" width="40" height="40" className="mr-3" alt=""/>Toss!</a>
+                    <a className="navbar-brand" href="#"><img src="/spinningcoin.jpg" width="40" height="40" className="mr-3" alt=""/>Flip for it!</a>
                     <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                         <span className="navbar-toggler-icon"></span>
                     </button>
@@ -96,7 +96,7 @@ class App extends React.Component {
             <div className="everything">
                 <div className="card mx-auto start-card" style={{position: "absolute", width: '30%', top: "50%", left:"35%"}}>
                     <div className="card-body px-4 py-3">
-                        <h5 className="card-title font-weight-light text-center">Toss!</h5>
+                        <h5 className="card-title font-weight-light text-center">Flip for it!</h5>
                         <div className="form-group" >
                             <input type="text" className="form-control" style={{width: '50%', display:'inline-block'}} placeholder="Username" onChange={()=>{this.changeUsername()}} value={this.state.inputUsername}/>
                             <input type="password" className="form-control" style={{width: '50%', display:'inline-block'}} onChange={()=>{this.changePassword()}} placeholder="Password" value={this.state.inputPassword}/>
