@@ -81,11 +81,12 @@ class App extends React.Component {
     if(this.state.userId !== null){
         return (
           <div className="everything">
-            <nav className="navbar navbar-expand-lg sticky-top d-print navbar-dark bg-dark" id="navbar">
-                    <a className="navbar-brand" href="#"><img src="#" width="40" height="40" className="mr-3" alt=""/>Toss!</a>
+            <nav className="navbar navbar-expand-lg sticky-top d-print navbar-dark bg-dark row" id="navbar">
+                    <a className="navbar-brand" href="#"><img src="/spinningcoin.jpg" width="40" height="40" className="mr-3" alt=""/>Toss!</a>
                     <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                         <span className="navbar-toggler-icon"></span>
                     </button>
+                    <a className="nav-link text-center col-3 offset-9 text-white" onClick={()=>{location.reload()}}>Logout</a>
             </nav>
             <Dashboard userId={this.state.userId}/>
           </div>
@@ -93,7 +94,7 @@ class App extends React.Component {
     } else {
         return(
             <div className="everything">
-                <div className="card mx-auto start-card" style={{width: '30%', marginTop: 300}}>
+                <div className="card mx-auto start-card" style={{position: "absolute", width: '30%', top: "50%", left:"35%"}}>
                     <div className="card-body px-4 py-3">
                         <h5 className="card-title font-weight-light text-center">Toss!</h5>
                         <div className="form-group" >
