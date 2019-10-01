@@ -80,7 +80,7 @@ class App extends React.Component {
   render() {
     if(this.state.userId !== null){
         return (
-          <div>
+          <div className="everything">
             <nav className="navbar navbar-expand-lg sticky-top d-print navbar-dark bg-dark" id="navbar">
                     <a className="navbar-brand" href="#"><img src="#" width="40" height="40" className="mr-3" alt=""/>Toss!</a>
                     <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -92,7 +92,7 @@ class App extends React.Component {
         );
     } else {
         return(
-            <div>
+            <div className="everything">
                 <div className="card mx-auto start-card" style={{width: '30%', marginTop: 300}}>
                     <div className="card-body px-4 py-3">
                         <h5 className="card-title font-weight-light text-center">Toss!</h5>

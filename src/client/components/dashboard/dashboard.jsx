@@ -529,20 +529,20 @@ class Dashboard extends React.Component {
   render() {
 
         return (
-          <div className="wrapper row">
+          <div className="wrapper row overflow-hidden">
 
-            <div className="leftCol col-3">
+            <div className="leftCol col-3 overflow-auto">
                 <UsersGroups
                     usersGroups={this.state.usersGroups}
                     selectGroup={(group)=>this.selectGroup(group)}
                 />
             </div>
 
-            <div className="midCol col-6">
+            <div className="midCol col-6 overflow-auto">
                 {this.setMidCol()}
             </div>
 
-            <div className="rightCol col-3">
+            <div className="rightCol col-3 overflow-auto">
                 {this.setFriendsCol()}
             </div>
 

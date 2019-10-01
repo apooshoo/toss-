@@ -1,4 +1,5 @@
 import React from 'react';
+import style from './style.scss';
 
 
 class SeePending extends React.Component {
@@ -65,14 +66,18 @@ class SeePending extends React.Component {
         <button className="btn btn-primary" onClick={()=>{
             this.getUsersFriends(this.props.userId);
             this.getInvitesReceived(this.props.userId);
-        }}>REFRESH LIST</button>
-        <h6>Invites Sent</h6>
-        <div>
-            {pendingSent}
+        }}>Refresh List</button>
+        <div className={style.overflow}>
+            <h6>Invites Sent</h6>
+            <div>
+                {pendingSent}
+            </div>
         </div>
-        <h6>Invites Received</h6>
-        <div>
-            {pendingReceived}
+        <div className={style.overflow}>
+            <h6>Invites Received</h6>
+            <div>
+                {pendingReceived}
+            </div>
         </div>
       </React.Fragment>
     );

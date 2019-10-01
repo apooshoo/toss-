@@ -1,6 +1,6 @@
 import React from 'react';
 
-import styles from './style.scss';
+import style from './style.scss';
 
 class UsersGroups extends React.Component {
   constructor() {
@@ -67,7 +67,7 @@ class UsersGroups extends React.Component {
           <div>
             <input type="search" placeholder="Search your groups" className="form-control" value={this.state.userInput} onChange={()=>{this.onUserInput()}}/>
           </div>
-          <div>
+          <div className={style.overflow}>
             {usersGroups}
           </div>
       </React.Fragment>

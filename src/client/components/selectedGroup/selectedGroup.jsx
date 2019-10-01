@@ -1,6 +1,6 @@
 import React from 'react';
 
-import styles from './style.scss';
+import style from './style.scss';
 
 class SelectedGroup extends React.Component {
   constructor() {
@@ -137,12 +137,12 @@ class SelectedGroup extends React.Component {
     let initWeightPerUser = pool.map(user=>{
         return 100/pool.length;
     });
-    console.log(initWeightPerUser);
+    console.log("initWeightPerUser", initWeightPerUser);
     let adjustedWeightPerUser = initWeightPerUser.map((weight, index)=>{//------------------------------ROUND DOWN FOR EASY WEIGHTING LATER
         let amountToAdjust = totalBalanceWithFriends[index].winbalance * 3
         return Math.floor(weight - amountToAdjust);
     });
-    console.log(adjustedWeightPerUser);
+    console.log("adjustedWeightPerUser", adjustedWeightPerUser);
     let totalWeight = adjustedWeightPerUser.reduce((a, b)=>{//-------------------------------------------DENOMINATOR FOR WEIGHTING
         return a + b;
     });
@@ -249,17 +249,20 @@ class SelectedGroup extends React.Component {
 
     return (
       <React.Fragment>
-        <button className="btn btn-primary" style={{display: 'block'}} onClick={()=>{this.mainMode()}}>Back to main</button>
-        <button className="btn btn-primary" style={{display: 'block'}} onClick={()=>{this.getGroupUsers(this.props.selectedGroup.groupid)}}>REFRESH</button>
-
-        <h1>{this.props.selectedGroup.groupname}</h1>
-        <div className="form-group w-50 mx-auto">
-            <input type="text" className="form-control" style={{display:'block'}} placeholder="Entry" value={this.props.entry} onChange={()=>{this.inputEntry()}}/>
-            <button className="btn btn-primary" onClick={()=>{this.submitEntry(this.props.userId, this.props.selectedGroup.groupid, this.props.entry)}}>Submit Entry</button>
+        <div className="row">
+            <button className="btn btn-primary col-3" onClick={()=>{this.mainMode()}}>Back to main</button>
+            <button className="btn btn-primary col-3 offset-6" onClick={()=>{this.getGroupUsers(this.props.selectedGroup.groupid)}}>Refresh</button>
         </div>
-        {settleBtn}
-        <h3>Winning Entry: {this.props.winningEntry}</h3>
-        {usersInGroup}
+        <div className={style.overflow}>
+            <h1>{this.props.selectedGroup.groupname}</h1>
+            <div className="form-group w-50 mx-auto">
+                <input type="text" className="form-control" style={{display:'block'}} placeholder="Entry" value={this.props.entry} onChange={()=>{this.inputEntry()}}/>
+                <button className="btn btn-primary" onClick={()=>{this.submitEntry(this.props.userId, this.props.selectedGroup.groupid, this.props.entry)}}>Submit Entry</button>
+            </div>
+            {settleBtn}
+            <h3>Winning Entry: {this.props.winningEntry}</h3>
+            {usersInGroup}
+        </div>
       </React.Fragment>
     );
   }

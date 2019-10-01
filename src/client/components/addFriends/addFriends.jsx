@@ -1,4 +1,5 @@
 import React from 'react';
+import style from './style.scss';
 
 
 class AddFriends extends React.Component {
@@ -50,7 +51,7 @@ class AddFriends extends React.Component {
         <div>
             <input type="search" placeholder="Search all users" className="form-control" value={this.state.userInput} onChange={()=>{this.onUserInput()}}/>
         </div>
-        <div>
+        <div className={style.overflow}>
             {allUsers}
         </div>
       </React.Fragment>
